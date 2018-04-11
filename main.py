@@ -6,35 +6,26 @@ See also https://www.python-boilerplate.com/flask
 """
 import os
 
-from flask import Flask, jsonify
-from flask_cors import CORS
+from flask import Flask
+from flask_restplus import Resource, Api
 
+app = Flask(__name__)
+api = Api(app)
 
-def create_app(config=None):
-    app = Flask(__name__)
+@api.route("/games")
+class Games(Resource):
+    def post(self):
+        return {"gameid": "hash"}
+    def put(self):
+        return {"action": "update game"}
 
-    # See http://flask.pocoo.org/docs/latest/config/
-    app.config.update(dict(DEBUG=True))
-    app.config.update(config or {})
-
-    # Setup cors headers to allow all domains
-    # https://flask-cors.readthedocs.io/en/latest/
-    CORS(app)
-
-    # Definition of the routes. Put them into their own file. See also
-    # Flask Blueprints: http://flask.pocoo.org/docs/latest/blueprints
-    @app.route("/")
-    def hello_world():
-        return "Hello World"
-
-    @app.route("/foo/<someId>")
-    def foo_url_arg(someId):
-        return jsonify({"echo": someId})
-
-    return app
-
+@api.route('/games/<id>')
+class Game(Resource):
+    def get(self, id):
+        return {"action": "current state"}
+    def delete(self, id):
+        return {"action": "abort game"}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    app = create_app()
     app.run(host="0.0.0.0", port=port)
