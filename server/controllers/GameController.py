@@ -1,24 +1,21 @@
-from flask_restplus import Resource
+from flask import Blueprint, request, jsonify
 
-from handlers.ApiHandler import api
+from services import GameService
+from utils.json.DefaultResponse import DefaultResponse
 
-resource \
-    = api.namespace('games', description='Operations related to game actions')
-
-
-@resource.route("/")
-class Games(Resource):
-    def post(self):
-        return {"gameid": "hash"}
-
-    def put(self):
-        return {"action": "update game"}
+blueprint_game = Blueprint('games', __name__, url_prefix="/games")
+gameService = GameService.GameService()
 
 
-@resource.route('/<id>')
-class Game(Resource):
-    def get(self, id):
-        return {"action": "current state"}
+@blueprint_game.route("", methods=["GET", "POST"])
+def games():
+    if request.method == "POST":
+        response = DefaultResponse(status=True, message="Game created successfully", result=gameService.createGame())
+        return jsonify(response.serialize())
+    elif request.method == "GET":
+        response = DefaultResponse(status=True, message="Games retrieved successfully", result=gameService.getGames())
+        return jsonify(response.serialize())
 
-    def delete(self, id):
-        return {"action": "abort game"}
+    # @bluetprint_game.route('/<id>/moves', methods='POST')
+    # def move(self, id):
+    #     if request
