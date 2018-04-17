@@ -10,3 +10,6 @@ class GameService():
 
     def getGames(self):
         return self._repo.getGames()
+
+    def getGame(self, id):
+        return self._repo.getGame(id)

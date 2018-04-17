@@ -16,6 +16,8 @@ def games():
         response = DefaultResponse(status=True, message="Games retrieved successfully", result=gameService.getGames())
         return jsonify(response.serialize())
 
-    # @bluetprint_game.route('/<id>/moves', methods='POST')
-    # def move(self, id):
-    #     if request
+
+@blueprint_game.route("/<id>", methods=["GET"])
+def game(id):
+    response = DefaultResponse(status=True, message="Game retrieved successfully", result=gameService.getGame(id))
+    return jsonify(response.serialize())
